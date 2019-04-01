@@ -1,25 +1,54 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import  GenerateEmployee  from  './GenerateEmployee';
+import  DisplayEmployee  from  './DisplayEmployee';
 
-class App extends Component {
+
+const  sampleEmployee = {
+  gender:  'male',
+  name: {
+      title:  'mr',
+      first:  'mathys',
+      last:  'aubert'
+  },
+  location: {
+      street:  '9467 rue gasparin',
+      city:  'perpignan',
+      postcode:  '90208'
+  },
+  email:  'mathys.aubert@example.com',
+  picture: {
+      medium:  'https://thesimpsonsquoteapi.glitch.me/quotes'
+  }
+};
+
+
+class App extends Component { 
+  constructor(props) {
+    super(props);
+    this.state = {
+      // on peut mettre notre sampleEmployee par défaut
+      // afin d'avoir toujours un employé d'affiché
+      employee:  sampleEmployee
+    };
+  } 
+  getEmployee() {
+  // Récupération de l'employé via fetch
+  fetch("https://thesimpsonsquoteapi.glitch.me/quotes")
+    .then(response  =>  response.json())
+    .then(data  => {
+      // Une fois les données récupérées, on va mettre à jour notre state avec les nouvelles données
+      this.setState({
+        employee:  data[0]
+      });
+  });
+}
   render() {
+  
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <GenerateEmployee  selectEmployee={() =>  this.getEmployee()}  />
+        <DisplayEmployee  employee={this.state.employee}  />
       </div>
     );
   }
